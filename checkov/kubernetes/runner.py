@@ -81,6 +81,12 @@ class Runner(BaseRunner):
                     else:
                         continue
 
+                    # Skip entity with parent (metadata["ownerReferences"]) in runtime
+                    # We will alert in runtime only
+                    if "ownerReferences" in entity_conf["metadata"] and \
+                            entity_conf["metadata"]["ownerReferences"] is not None:
+                        continue
+
                     # Append containers and initContainers to definitions list
                     for type in ["containers", "initContainers"]:
                         containers = []
@@ -127,6 +133,13 @@ class Runner(BaseRunner):
                         else:
                             continue
 
+                    # Skip entity with parent (metadata["ownerReferences"]) in runtime
+                    # We will alert in runtime only
+                    if "metadata" in entity_conf:
+                        if "ownerReferences" in entity_conf["metadata"] and \
+                                entity_conf["metadata"]["ownerReferences"] is not None:
+                            continue
+
                     # Skip Kustomization Templates (for now)
                     if entity_conf["kind"] == "Kustomization":
                         continue
@@ -157,7 +170,6 @@ class Runner(BaseRunner):
                                         resource=check.get_resource_id(entity_conf), evaluations=variable_evaluations,
                                         check_class=check.__class__.__module__)
                         report.add_record(record=record)
-
 
         return report
 
@@ -201,7 +213,7 @@ def get_skipped_checks(entity_conf):
     else:
         if "metadata" in entity_conf.keys():
             metadata = entity_conf["metadata"]
-    if "annotations" in metadata.keys():
+    if "annotations" in metadata.keys() and metadata["annotations"] is not None:
         for key in metadata["annotations"].keys():
             skipped_item = {}
             if "checkov.io/skip" in key or "bridgecrew.io/skip" in key:
