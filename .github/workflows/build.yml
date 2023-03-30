@@ -145,7 +145,7 @@ jobs:
           echo ::set-env name=RELEASE_VERSION::$(echo $checkov_version)
 
       - name: Publish to Registry
-        uses: elgohr/Publish-Docker-Github-Action@master
+        uses: elgohr/Publish-Docker-Github-Action@v5
         with:
           name: bridgecrew/checkov
           username: ${{ secrets.DOCKER_USERNAME }}
@@ -162,7 +162,7 @@ jobs:
           echo ::set-env name=RELEASE_VERSION::$(echo $checkov_version)
           echo $RELEASE_VERSION
       - name: Publish to Registry
-        uses: elgohr/Publish-Docker-Github-Action@master
+        uses: elgohr/Publish-Docker-Github-Action@v5
         with:
           name: bridgecrew/checkov-k8s
           username: ${{ secrets.DOCKER_USERNAME }}
